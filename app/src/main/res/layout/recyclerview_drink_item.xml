@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/drink_item"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/holo_orange_light"
+                style="@style/recycler_view_item">
+    <TextView android:id="@+id/drink_fields"
+              style="@style/recycler_view_item_text"
+              app:fontFamily="@font/pacifico"
+              android:layout_alignParentStart="true"
+              android:text="@string/drink_fields_display"
+              android:textStyle="bold"
+    />
+    <TextView android:id="@+id/drink_values"
+              style="@style/recycler_view_item_text"
+              app:fontFamily="@font/pacifico"
+              android:layout_alignParentEnd="true"
+              android:layout_toEndOf="@id/drink_fields"
+              android:layout_marginStart="5dp"
+    />
+    <TextView android:id="@+id/view_rating_text"
+              android:layout_width="80dp"
+              android:layout_height="80dp"
+              app:fontFamily="@font/pacifico"
+              android:layout_alignParentEnd="true"
+              android:textAllCaps="false"
+              android:text="@string/view_ratings"
+              android:background="@drawable/rounded_corners_view_rating"
+              android:gravity="center"
+              android:layout_centerVertical="true"
+              android:layout_marginEnd="0dp"
+    />
+
+</RelativeLayout>

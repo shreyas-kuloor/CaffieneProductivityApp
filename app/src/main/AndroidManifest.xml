@@ -9,9 +9,25 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
+        <activity android:name=".ViewRatingDataActivity"
+                  android:label="@string/title_activity_view_data"
+                  android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity android:name=".RateProductivityActivity"
+                  android:theme="@style/AppTheme.NoActionBar"
+                  android:label="@string/title_activity_rate_productivity"
+        >
+        </activity>
+
+        <receiver
+                android:name=".NotificationService"
+                android:enabled="true"
+                android:exported="true">
+        </receiver>
+
         <activity
-                android:name=".ThankYouActivity"
-                android:label="@string/title_activity_thank_you"
+                android:name=".ViewDataActivity"
+                android:label="@string/title_activity_view_data"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
@@ -28,9 +44,11 @@
                 android:label="@string/title_activity_log_drink"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+                  android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.VIEW"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>

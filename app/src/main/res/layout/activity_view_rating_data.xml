@@ -10,7 +10,7 @@
         tools:openDrawer="start">
 
     <include
-            layout="@layout/app_bar_thank_you"
+            layout="@layout/app_bar_view_rating_data"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 

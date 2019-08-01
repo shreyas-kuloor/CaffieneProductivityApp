@@ -1,8 +1,11 @@
 <resources>
-    <string name="app_name">CaffieneProductivityApp</string>
-    <string name="view_hist">View History</string>
+    <string name="app_name">Caffeine Productivity App</string>
+    <string name="view_hist">View Data</string>
     <string name="log_drink">Log a Drink</string>
     <string name="title_activity_settings">Settings</string>
+    <string name="small_size">8 oz.</string>
+    <string name="medium_size">12 oz.</string>
+    <string name="large_size">16 oz.</string>
 
     <!-- Preference Titles -->
 
@@ -11,6 +14,7 @@
     <!-- Sync Preferences -->
     <string name="title_activity_nav_drawer">NavDrawerActivity</string>
     <string name="title_activity_log_drink">LogDrinkActivity</string>
+    <string name="title_activity_rate_productivity">Rate Productivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
@@ -24,10 +28,13 @@
     <string name="menu_tools">Tools</string>
     <string name="menu_share">Share</string>
     <string name="menu_send">Send</string>
+    <string name="menu_rate">Rate Productivity</string>
+    <string name="menu_hist">View History</string>
 
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>
     <string name="sync_header">Sync</string>
+    <string name="notification_header">Notifications</string>
 
     <!-- Messages Preferences -->
     <string name="signature_title">Your signature</string>
@@ -38,11 +45,37 @@
     <string name="attachment_title">Download incoming attachments</string>
     <string name="attachment_summary_on">Automatically download attachments for incoming emails</string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
-    <string name="title_activity_view_history">ViewHistoryActivity</string>
-    <string name="title_activity_thank_you">ThankYouActivity</string>
+    <string name="title_activity_view_history">View History</string>
+    <string name="title_activity_view_data">ViewDataActivity</string>
+
+    <!-- Notification Preferences -->
+    <string name="enable_notifications_title">Enable rating reminders</string>
+    <string name="notification_frequency_title">Rating reminder frequency</string>
 
     <!-- Custom -->
     <string name="drink_size">What size was your drink?</string>
-    <string name="thank_you_msg">Thank you. We\'ll be asking you to rate your productivity periodically for the next few hours. Until then, keep doing whatever it is you do best!</string>
-
+    <string name="thank_you_msg_small">Thank you!\nWe just logged:\nSmall (8 oz.) cup.\nWe\'ll be asking you to rate
+        your productivity periodically for the next few hours. Until then, keep doing whatever it is you do best!
+    </string>
+    <string name="thank_you_msg_med">Thank you!\nWe just logged:\nMedium (12 oz.) cup.\nWe\'ll be asking you to rate
+        your productivity periodically for the next few hours. Until then, keep doing whatever it is you do best!
+    </string>
+    <string name="thank_you_msg_lrg">Thank you!\nWe just logged:\nLarge (16 oz.) cup.\nWe\'ll be asking you to rate your
+        productivity periodically for the next few hours. Until then, keep doing whatever it is you do best!
+    </string>
+    <string name="channel_name">Productivity Notification Channel</string>
+    <string name="channel_description">Notification channel for productivity rating notifications.</string>
+    <string name="notification_title">Rate Your Productivity</string>
+    <string name="notification_description">Tap the notification to rate your productivity on a 1\-5 scale.</string>
+    <string name="rating_prompt">Please rate your productivity on a scale of 1-5, with 1 being completely unproductive
+        and 5 being extremely productive.
+    </string>
+    <string name="rating_fields_display">Productivity:\nTimestamp:</string>
+    <string name="rating_values_display">%1$d\n%2$s</string>
+    <string name="drink_fields_display">Drink ID:\nDrink Size:\nStart Time:</string>
+    <string name="drink_values_display">%1$d\n%2$s\n%3$s</string>
+    <string name="view_ratings">View\nProductivity\nRatings</string>
+    <string name="add_ratings">Add\nProductivity\nRatings</string>
+    <string name="no_ratings">No\nProductivity\nRatings</string>
+    <string name="rating_action_bar_title">Drink %1$d</string>
 </resources>

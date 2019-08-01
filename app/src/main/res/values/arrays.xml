@@ -12,4 +12,20 @@
         <item>reply</item>
         <item>reply_all</item>
     </string-array>
+
+    <!-- Notification Frequency Preference -->
+    <string-array name="frequency_entries">
+        <item>5 minutes</item>
+        <item>10 minutes</item>
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>1 hour</item>
+    </string-array>
+    <string-array name="frequency_values">
+        <item>300000</item>
+        <item>600000</item>
+        <item>900000</item>
+        <item>1800000</item>
+        <item>3600000</item>
+    </string-array>
 </resources>

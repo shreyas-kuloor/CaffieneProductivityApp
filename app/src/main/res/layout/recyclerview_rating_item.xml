@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/rating_item"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="#915809"
+                style="@style/recycler_view_item">
+    <TextView android:id="@+id/rating_fields"
+              style="@style/recycler_view_item_text"
+              app:fontFamily="@font/pacifico"
+              android:layout_alignParentStart="true"
+              android:text="@string/rating_fields_display"
+              android:textStyle="bold"
+              android:textColor="#FFFFD1"
+    />
+    <TextView android:id="@+id/rating_values"
+              style="@style/recycler_view_item_text"
+              app:fontFamily="@font/pacifico"
+              android:layout_alignParentEnd="true"
+              android:layout_toEndOf="@id/rating_fields"
+              android:layout_marginStart="15dp"
+              android:textColor="#FFFFD1"
+    />
+
+</RelativeLayout>
