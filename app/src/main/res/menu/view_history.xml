@@ -5,4 +5,23 @@
           android:title="@string/action_settings"
           android:orderInCategory="100"
           app:showAsAction="never"/>
+    <group android:checkableBehavior="single">
+        <item
+                android:id="@+id/daily_filter"
+                android:title="@string/daily_filter_title"
+                android:checked="true"
+        />
+        <item
+                android:id="@+id/weekly_filter"
+                android:title="@string/weekly_filter_title"
+        />
+        <item
+                android:id="@+id/monthly_filter"
+                android:title="@string/monthly_filter_title"
+        />
+        <item
+                android:id="@+id/yearly_filter"
+                android:title="@string/yearly_filter_title"
+        />
+    </group>
 </menu>

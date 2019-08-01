@@ -78,4 +78,9 @@
     <string name="add_ratings">Add\nProductivity\nRatings</string>
     <string name="no_ratings">No\nProductivity\nRatings</string>
     <string name="rating_action_bar_title">Drink %1$d</string>
+    <string name="daily_filter_title">Daily Chart</string>
+    <string name="weekly_filter_title">Weekly Chart</string>
+    <string name="monthly_filter_title">Monthly Chart</string>
+    <string name="yearly_filter_title">Yearly Chart</string>
+    <string name="chart_filter_title">Chart Filters</string>
 </resources>
