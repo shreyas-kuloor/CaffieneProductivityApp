@@ -9,14 +9,16 @@
         tools:showIn="@layout/app_bar_view_history"
         tools:context=".ViewHistoryActivity">
 
-    <com.anychart.AnyChartView
-            android:id="@+id/any_chart_view"
+    <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/chart"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="25dp"
     />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

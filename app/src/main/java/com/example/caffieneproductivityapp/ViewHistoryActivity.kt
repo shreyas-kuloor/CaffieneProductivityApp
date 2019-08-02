@@ -11,21 +11,21 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.anychart.AnyChart
-import com.anychart.AnyChartView
-import com.anychart.chart.common.dataentry.DataEntry
-import com.anychart.chart.common.dataentry.ValueDataEntry
-import com.anychart.charts.Cartesian
-import com.anychart.core.cartesian.series.Line
-import com.anychart.enums.Anchor
-import com.anychart.enums.MarkerType
-import com.anychart.scales.DateTime
 import com.example.caffieneproductivityapp.persistence.DrinkRatingViewModel
 import com.example.caffieneproductivityapp.persistence.Rating
+import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.components.YAxis
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.formatter.IAxisValueFormatter
 import com.google.android.material.navigation.NavigationView
-import java.util.*
-import java.util.stream.Collectors
-import kotlin.collections.ArrayList
+import java.time.Instant
+import java.time.ZoneId
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoField
 
 
 class ViewHistoryActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -83,71 +83,89 @@ class ViewHistoryActivity : AppCompatActivity(), NavigationView.OnNavigationItem
             }
             R.id.daily_filter -> {
                 item.isChecked = true
-                println("SIZE=========" + ratingsList.size)
-                val chartView : AnyChartView = findViewById(R.id.any_chart_view)
-                val chart : Cartesian = AnyChart.line()
-                initChart(chart)
-                setChartLimits(chart, ChartType.Daily)
-                val timestamps : List<Long> = ratingsList.stream().map(Rating::timeStamp).collect(Collectors.toList())
-                val productivities : List<Int> = ratingsList.stream().map(Rating::productivityRating).collect(Collectors.toList())
-
-                val data : ArrayList<DataEntry> = ArrayList()
-                val currentTime = System.currentTimeMillis()
-                val midnightBefore = currentTime - currentTime % (24 * 60 * 60 * 1000)
-                val midnightAfter = midnightBefore + 24 * 60 * 60 * 1000
-                val maxIndex = timestamps.size - 1
-                for (i in 0..maxIndex) {
-                    val timestampsAdjusted = timestamps[i]-14400000
-                    if (timestampsAdjusted in midnightBefore..midnightAfter) {
-                        data.add(ValueDataEntry(timestampsAdjusted, productivities[i]))
+                val chart : LineChart = findViewById(R.id.chart)
+                val data : ArrayList<Entry> = ArrayList()
+                ratingsList.forEach {
+                    if (it.timeStamp in getTodayStart()..getTodayEnd()) {
+                        data.add(Entry(it.timeStamp.toFloat(), it.productivityRating.toFloat()))
                     }
                 }
-                val series : Line = chart.line(data)
-                series.name("Productivity Rating")
-                series.hovered().markers().enabled(true)
-                series.hovered().markers().type(MarkerType.CIRCLE).size(4)
-                series.tooltip().position("right").anchor(Anchor.LEFT_CENTER).offsetX(5).offsetY(5)
+                val dataSet = LineDataSet(data, "Productivity Ratings")
+                dataSet.color = getColor(R.color.colorPrimary)
+                dataSet.valueTextColor = getColor(R.color.colorPrimaryDark)
 
-                chartView.setChart(chart)
+                val format = DateTimeFormatter.ofPattern("HH:mm")
+                val xAxis = chart.xAxis
+                xAxis.position = XAxis.XAxisPosition.BOTTOM
+                val formatter = IAxisValueFormatter { value, _ ->
+                    val date = ZonedDateTime.ofInstant(Instant.ofEpochMilli(value.toLong()), ZoneId.of(ZoneId.systemDefault().toString()))
+                    date.format(format)
+                }
+                xAxis.granularity = 1f
+                xAxis.textSize = 1f
+
+                xAxis.axisMinimum = getTodayStart().toFloat()
+                xAxis.axisMaximum = getTodayEnd().toFloat()
+
+                xAxis.valueFormatter = formatter
+
+                val yAxisLeft : YAxis = chart.axisLeft
+                yAxisLeft.granularity = 1f
+                yAxisLeft.axisMinimum = 0f
+                yAxisLeft.axisMaximum = 5f
+
+                val yAxisRight: YAxis = chart.axisRight
+                yAxisRight.isEnabled = false
+
+                val lineData = LineData(dataSet)
+                chart.data = lineData
+                chart.animateX(2500)
+                chart.description.text = "Daily Productivity Over Time"
+                chart.invalidate()
+
             }
             R.id.weekly_filter -> {
                 item.isChecked = true
-                println("SIZE=========" + ratingsList.size)
-                val chartView : AnyChartView = findViewById(R.id.any_chart_view)
-                val chart : Cartesian = AnyChart.line()
-                initChart(chart)
-                setChartLimits(chart, ChartType.Weekly)
-                val timestamps : List<Long> = ratingsList.stream().map(Rating::timeStamp).collect(Collectors.toList())
-                val productivities : List<Int> = ratingsList.stream().map(Rating::productivityRating).collect(Collectors.toList())
-
-
-                val data : ArrayList<DataEntry> = ArrayList()
-                var cal : Calendar = Calendar.getInstance()
-                cal.set(Calendar.HOUR_OF_DAY, 0)
-                cal.clear(Calendar.MINUTE)
-                cal.clear(Calendar.SECOND)
-                cal.clear(Calendar.MILLISECOND)
-                cal.set(Calendar.DAY_OF_WEEK, 1)
-                val firstDayOfWeek = cal.timeInMillis
-
-                cal.add(Calendar.WEEK_OF_YEAR, 1)
-                cal.add(Calendar.MILLISECOND, -1)
-                val lastDayOfWeek = cal.timeInMillis
-                val maxIndex = timestamps.size - 1
-                for (i in 0..maxIndex) {
-                    val timestampsAdjusted = timestamps[i]-14400000
-                    if (timestampsAdjusted in firstDayOfWeek..lastDayOfWeek) {
-                        data.add(ValueDataEntry(timestampsAdjusted, productivities[i]))
+                val chart : LineChart = findViewById(R.id.chart)
+                val data : ArrayList<Entry> = ArrayList()
+                ratingsList.forEach {
+                    if (it.timeStamp in getWeekStart()..getWeekEnd()) {
+                        data.add(Entry(it.timeStamp.toFloat(), it.productivityRating.toFloat()))
                     }
                 }
+                val dataSet = LineDataSet(data, "Productivity Ratings")
+                dataSet.color = getColor(R.color.colorPrimary)
+                dataSet.valueTextColor = getColor(R.color.colorPrimaryDark)
 
-                val series : Line = chart.line(data)
-                series.name("Productivity Rating")
-                series.hovered().markers().enabled(true)
-                series.hovered().markers().type(MarkerType.CIRCLE).size(4)
-                series.tooltip().position("right").anchor(Anchor.LEFT_CENTER).offsetX(5).offsetY(5)
+                val format = DateTimeFormatter.ofPattern("MMM dd HH:mm")
+                val xAxis = chart.xAxis
+                xAxis.position = XAxis.XAxisPosition.BOTTOM
+                val formatter = IAxisValueFormatter { value, _ ->
+                    val date = ZonedDateTime.ofInstant(Instant.ofEpochMilli(value.toLong()), ZoneId.of(ZoneId.systemDefault().toString()))
+                    date.format(format)
+                }
+                xAxis.granularity = 1f
+                xAxis.textSize = 1f
 
-                chartView.setChart(chart)
+                xAxis.setLabelCount(8 , true)
+                xAxis.axisMinimum = getWeekStart().toFloat()
+                xAxis.axisMaximum = getWeekEnd().toFloat()
+
+                xAxis.valueFormatter = formatter
+
+                val yAxisLeft : YAxis = chart.axisLeft
+                yAxisLeft.granularity = 1f
+                yAxisLeft.axisMinimum = 0f
+                yAxisLeft.axisMaximum = 5f
+
+                val yAxisRight: YAxis = chart.axisRight
+                yAxisRight.isEnabled = false
+
+                val lineData = LineData(dataSet)
+                chart.data = lineData
+                chart.animateX(2500)
+                chart.description.text = "Weekly Productivity Over Time"
+                chart.invalidate()
             }
             R.id.monthly_filter -> {
                 item.isChecked = true
@@ -187,56 +205,31 @@ class ViewHistoryActivity : AppCompatActivity(), NavigationView.OnNavigationItem
         return true
     }
 
-    private fun initChart(chart: Cartesian) {
-        chart.apply {
-            title("Daily Productivity Over Time")
-            yAxis(0).title("Rating")
-            yScale().minimum(0)
-            yScale().maximum(5)
-            yScale().ticks().allowFractional(false)
-            xAxis(0).title("Time")
-        }
+    private fun getTodayStart() : Long {
+        val timeZone : String = ZoneId.systemDefault().toString()
+        val now = ZonedDateTime.now(ZoneId.of(timeZone))
+        val todayStart : ZonedDateTime = now.toLocalDate().atStartOfDay(ZoneId.of(timeZone))
+        return todayStart.toInstant().toEpochMilli()
     }
 
-    private fun setChartLimits(chart: Cartesian, type: ChartType) {
-        when (type) {
-            ChartType.Daily -> {
-                val dateTimeScale = DateTime.instantiate()
-                val currentTime = System.currentTimeMillis()
-                val midnightBefore = currentTime - currentTime % (24 * 60 * 60 * 1000)
-                val midnightAfter = midnightBefore + 24 * 60 * 60 * 1000
-                dateTimeScale.ticks().interval(0,0,0,1,0, 0)
-                dateTimeScale.minimum(midnightBefore)
-                dateTimeScale.maximum(midnightAfter)
-                chart.xScale(dateTimeScale)
-            }
-            ChartType.Weekly -> {
-                val dateTimeScale = DateTime.instantiate()
-                var cal : Calendar = Calendar.getInstance()
-                cal.firstDayOfWeek
-                cal.set(Calendar.HOUR_OF_DAY, 0)
-                cal.clear(Calendar.MINUTE)
-                cal.clear(Calendar.SECOND)
-                cal.clear(Calendar.MILLISECOND)
-                cal.set(Calendar.DAY_OF_WEEK, cal.firstDayOfWeek)
-                val firstDayOfWeek = cal.timeInMillis
+    private fun getTodayEnd() : Long {
+        val timeZone : String = ZoneId.systemDefault().toString()
+        val now = ZonedDateTime.now(ZoneId.of(timeZone))
+        val todayEnd : ZonedDateTime = now.toLocalDate().plusDays(1).atStartOfDay(ZoneId.of(timeZone))
+        return todayEnd.toInstant().toEpochMilli()
+    }
 
-                cal.add(Calendar.WEEK_OF_YEAR, 1)
-                cal.add(Calendar.MILLISECOND, -1)
-                val lastDayOfWeek = cal.timeInMillis
-
-                dateTimeScale.ticks().interval(0,0,1,0,0, 0)
-                dateTimeScale.minimum(firstDayOfWeek)
-                dateTimeScale.maximum(lastDayOfWeek)
-                chart.xScale(dateTimeScale)
-            }
-            ChartType.Monthly -> {
-
-            }
-            ChartType.Yearly -> {
-
-            }
-        }
+    private fun getWeekStart() : Long {
+        val timeZone : String = ZoneId.systemDefault().toString()
+        val now = ZonedDateTime.now(ZoneId.of(ZoneId.systemDefault().toString()))
+        val weekStart : ZonedDateTime = now.with(ChronoField.DAY_OF_WEEK, 1).toLocalDate().atStartOfDay(ZoneId.of(timeZone))
+        return weekStart.toInstant().toEpochMilli()
+    }
+    private fun getWeekEnd() : Long {
+        val timeZone : String = ZoneId.systemDefault().toString()
+        val now = ZonedDateTime.now(ZoneId.of(ZoneId.systemDefault().toString()))
+        val weekEnd : ZonedDateTime = now.with(ChronoField.DAY_OF_WEEK, 1).toLocalDate().plusWeeks(1).atStartOfDay(ZoneId.of(timeZone))
+        return weekEnd.toInstant().toEpochMilli()
     }
 
     private enum class ChartType {
